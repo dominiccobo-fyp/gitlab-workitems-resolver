@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'maven'
     id 'maven-publish'
-    id 'org.springframework.boot' version '2.1.9.RELEASE'
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
     id "com.palantir.git-version" version "0.12.2"
 }
 
@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket:2.1.8.RELEASE'
     implementation 'com.dominiccobo.fyp:context-lsp-api:0.2.2'
     implementation 'org.axonframework:axon-spring-boot-starter:4.2'
-    implementation 'org.kohsuke:github-api:1.95'
+    implementation 'org.gitlab4j:gitlab4j-api:4.12.18'
 
     testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
     testImplementation group: 'junit', name: 'junit', version: '4.12'
@@ -55,6 +55,35 @@ publishing {
         }
     }
 }
+
+sourceSets {
+    integrationTest {
+        java {
+            srcDir "src/integration-test/java"
+            compileClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.output
+        }
+        resources {
+            srcDir "src/integration-test/resources"
+        }
+
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
