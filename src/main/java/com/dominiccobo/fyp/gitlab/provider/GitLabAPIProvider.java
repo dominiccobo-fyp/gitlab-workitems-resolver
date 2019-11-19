@@ -38,7 +38,7 @@ public class GitLabAPIProvider implements GitLabAPI {
         try {
             Project project = apiProvider
                     .getProjectApi()
-                    .getProject(repoDetails.getOrgOrUserName(), repoDetails.getOrgOrUserName());
+                    .getProject(repoDetails.getOrgOrUserName(), repoDetails.getProjectName());
 
             if (project.getIssuesEnabled()) {
                 Integer projectId = project.getId();
